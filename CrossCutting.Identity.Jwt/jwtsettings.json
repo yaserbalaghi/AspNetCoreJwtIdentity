@@ -1,9 +1,9 @@
 {
   "JwtSettings": {
-    "Audience": "COM.YBISOFT.PIAMINO",
-    "Issuer": "COM.YBISOFT.PIAMINO",
+    "Audience": "Ybisoft.Com",
+    "Issuer": "Ybisoft.Com",
     "SecretKey": "^Q+Ybe401@ErXO0zZ1$",
-    "EncryptKey": "/^Y@ZahraM@d@d$/",
+    "EncryptKey": "/^Y@Ser<>MJdvd$/",
     "NotBeforeMinutes": "0.0",
     "ExpirationDay": "30.0"
   }
