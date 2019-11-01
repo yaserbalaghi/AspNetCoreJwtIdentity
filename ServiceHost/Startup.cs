@@ -24,7 +24,7 @@ namespace ServiceHost
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options => { options.Filters.Add(new AuthorizeFilter()); });
+            services.AddControllers();
             services.AddJwtAuthentication();
 
         }
