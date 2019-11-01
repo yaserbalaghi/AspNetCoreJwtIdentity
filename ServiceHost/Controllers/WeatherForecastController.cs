@@ -24,7 +24,7 @@ namespace ServiceHost.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IJwtService _jwtService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger , IJwtService jwtService)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IJwtService jwtService)
         {
             _logger = logger;
             this._jwtService = jwtService;
@@ -38,11 +38,10 @@ namespace ServiceHost.Controllers
         {
             var testUser = new User
             {
-                Id = Guid.NewGuid(),
                 UserName = "admin",
                 Password = "1q2w3e4r5t6y",
                 FullName = "Yaser balaghi",
-                Gender = true // as male
+                Gender = true // as male 
             };
 
             return Content(await _jwtService.GenerateAsync(testUser));
