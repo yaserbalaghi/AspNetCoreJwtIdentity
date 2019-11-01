@@ -48,12 +48,11 @@ namespace ServiceHost.Controllers
         }
 
         //   |  |
-        //   |  |
-        //   |  |  First get a token for the fake user(yaser balaghi), then call other actions...
-        //   |  |
+        //   |  |  First get a token for the fake user(yaser balaghi) by calling GetToken Action
+        //   |  |  then call the following actions...
+        //   |  |   
         //   \  /
         //    \/ 
-
 
         [HttpGet]
         [Authorize]
