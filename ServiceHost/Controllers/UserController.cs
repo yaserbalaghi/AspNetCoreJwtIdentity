@@ -10,22 +10,21 @@ namespace ServiceHost.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class UserController : ControllerBase 
     {
         private readonly IJwtService _jwtService;
 
-        public WeatherForecastController(IJwtService jwtService)
+        public UserController(IJwtService jwtService)
         {
             this._jwtService = jwtService;
         } 
-
 
         [HttpGet]
         [Route("[action]")]
         [AllowAnonymous]
         public async Task<ActionResult> GetToken()
         {
-            var testUser = new User
+            var fakeUser = new User
             {
                 UserName = "admin",
                 Password = "1q2w3e4r5t6y",
@@ -33,9 +32,8 @@ namespace ServiceHost.Controllers
                 Gender = true // as male 
             };
 
-            return Content(await _jwtService.GenerateAsync(testUser));
+            return Content(await _jwtService.GenerateAsync(fakeUser));
         }
-
 
         [HttpGet]
         public ActionResult Get()
