@@ -1,6 +1,6 @@
 using System;
 
-namespace ServiceHost
+namespace ServiceHost.Models
 {
     public class WeatherForecast
     {

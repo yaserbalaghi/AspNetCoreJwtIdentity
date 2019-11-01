@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CrossCutting.Identity.Jwt\CrossCutting.Identity.Jwt.csproj" />
   </ItemGroup>
 
 </Project>
