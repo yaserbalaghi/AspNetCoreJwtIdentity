@@ -5,6 +5,8 @@
     "SecretKey": "^Q+Ybe401@ErXO0zZ1$",
     "EncryptKey": "/^Y@Ser<>MJdvd$/",
     "NotBeforeMinutes": "0.0",
-    "ExpirationDay": "30.0"
+    "ExpirationDay": "30.0",
+
+    "ConnectionString": "Data Source=.;Initial Catalog=IdentityDb;Integrated Security=SSPI" 
   }
 }

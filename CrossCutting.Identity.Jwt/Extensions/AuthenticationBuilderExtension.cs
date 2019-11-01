@@ -1,21 +1,34 @@
 ﻿using System;
+using System.Net;
+using System.Security.Authentication;
 using System.Text;
+using System.Threading.Tasks;
+using CrossCutting.Identity.Jwt.Config;
+using CrossCutting.Identity.Jwt.Context;
 using CrossCutting.Identity.Jwt.Contracts;
+using CrossCutting.Identity.Jwt.Repositories;
 using CrossCutting.Identity.Jwt.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using static CrossCutting.Identity.Jwt.Config.JwtSettingsHandler;
 
 namespace CrossCutting.Identity.Jwt.Extensions
 {
-    public static class AuthenticationBuilderExtension 
+    public static class AuthenticationBuilderExtension
     {
-        public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services)
+        public static void AddJwtAuthentication(this IServiceCollection services)
         {
-            services.AddScoped<IJwtService, JwtService>();
-            return services.AddAuthentication(options =>
+            services.AddScoped<IJwtIdentityService, JwtIdentityService>();
+            services.AddScoped<IJwtIdentityRepository, JwtIdentityRepository>();
+            services.AddDbContext<IdentityDbContext>(options =>
+            {
+                options.UseSqlServer(Settings.ConnectionString);
+            });
+
+            services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -24,7 +37,7 @@ namespace CrossCutting.Identity.Jwt.Extensions
             }).SetJwtBearerOptions();
         }
 
-        public static AuthenticationBuilder SetJwtBearerOptions(this AuthenticationBuilder builder)
+        private static AuthenticationBuilder SetJwtBearerOptions(this AuthenticationBuilder builder)
         {
             return builder.AddJwtBearer(options =>
             {
@@ -42,6 +55,21 @@ namespace CrossCutting.Identity.Jwt.Extensions
                     ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Settings.SecretKey)),
                     TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Settings.EncryptKey))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnChallenge = ctx =>
+                    {
+                        if (ctx.AuthenticateFailure != null)
+                            return Task.FromException(new UnauthorizedAccessException("Unauthorized Request",
+                                    ctx.AuthenticateFailure));
+                        return Task.FromException(new UnauthorizedAccessException("Unauthorized Request"));
+                    },
+                    OnTokenValidated = ctx =>
+                    {
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
         }

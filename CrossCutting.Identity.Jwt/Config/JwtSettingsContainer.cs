@@ -9,6 +9,7 @@ namespace CrossCutting.Identity.Jwt.Config
         public String SecretKey { get; set; }
         public String EncryptKey { get; set; }
         public Double NotBeforeMinutes { get; set; }
-        public Double ExpirationDay { get; set; } 
+        public Double ExpirationDay { get; set; }
+        public String ConnectionString { get; set; } 
     }
 }

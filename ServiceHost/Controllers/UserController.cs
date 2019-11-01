@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using CrossCutting.Identity.Jwt.Contracts;
 using CrossCutting.Identity.Jwt.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -11,44 +13,29 @@ namespace ServiceHost.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IJwtService _jwtService;
+        private readonly IJwtIdentityService _identityService;
+        private readonly IJwtIdentityRepository _identityRepository;
 
-        public UserController(IJwtService jwtService)
+        public UserController(IJwtIdentityService identityService, IJwtIdentityRepository identityRepository)
         {
-            this._jwtService = jwtService;
+            this._identityService = identityService;
+            this._identityRepository = identityRepository;
         }
 
         [HttpGet]
         [Route("[action]")]
-        [AllowAnonymous]
-        public async Task<ActionResult> GetToken()
+        [AllowAnonymous]                        /*uname=admin&pwd=123456*/
+        public async Task<ActionResult> GetToken(String uname, String pwd, CancellationToken cancellationToken)
         {
-            var fakeUser = new User
-            {
-                UserName = "admin",
-                Password = "1q2w3e4r5t6y",
-                FullName = "Yaser balaghi",
-                Gender = true, // as male 
-                Roles =
-                {
-                    new Role
-                    {
-                        Id = 1,
-                        Name = "ADMIN"
-                    },
-                    new Role
-                    {
-                        Id = 2,
-                        Name = "WRITER"
-                    }
-                }
-            };
+            var user = await _identityRepository.Get(uname, pwd, cancellationToken);
+            if (user == null)
+                return NotFound("Username or password is incorrect");
 
-            return Content(await _jwtService.GenerateAsync(fakeUser));
+            return Content(await _identityService.GenerateTokenAsync(user));
         }
 
         //   |  |
-        //   |  |  First get a token for the fake user(yaser balaghi) by calling GetToken Action
+        //   |  |  First login and get a token for the user (admin) by calling GetToken Action and send parameters to it,
         //   |  |  then call the following actions...
         //   |  |   
         //   \  /

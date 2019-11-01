@@ -14,9 +14,9 @@ using static CrossCutting.Identity.Jwt.Config.JwtSettingsHandler;
 
 namespace CrossCutting.Identity.Jwt.Services
 {
-    public class JwtService : IJwtService
+    public class JwtIdentityService : IJwtIdentityService
     {
-        public async Task<String> GenerateAsync(User user)
+        public async Task<String> GenerateTokenAsync(User user)
         {
             var securityKey = Encoding.UTF8.GetBytes(Settings.SecretKey);
             var signingCredentials =
@@ -24,7 +24,8 @@ namespace CrossCutting.Identity.Jwt.Services
 
             var encryptKey = Encoding.UTF8.GetBytes(Settings.EncryptKey);
             var encryptingCredentials =
-                new EncryptingCredentials(new SymmetricSecurityKey(encryptKey), SecurityAlgorithms.Aes128KW, SecurityAlgorithms.Aes128CbcHmacSha256);
+                new EncryptingCredentials(new SymmetricSecurityKey(encryptKey), SecurityAlgorithms.Aes128KW,
+                    SecurityAlgorithms.Aes128CbcHmacSha256);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -43,7 +44,6 @@ namespace CrossCutting.Identity.Jwt.Services
             var writeToken = tokenHandler.WriteToken(securityToken);
             return await Task.FromResult(writeToken);
         }
-
         private IEnumerable<Claim> _getClaims(User user)
         {
             var claims = new List<Claim>
@@ -52,12 +52,11 @@ namespace CrossCutting.Identity.Jwt.Services
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Surname, user.FullName),
                 new Claim(ClaimTypes.Gender, user.Gender ? "Male" : "Female"),
-                new Claim(new ClaimsIdentityOptions().SecurityStampClaimType,user.SecurityStamp)
+                new Claim(new ClaimsIdentityOptions().SecurityStampClaimType, user.SecurityStamp)
             };
 
-            claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
+            claims.AddRange(user.Roles.Select(userRoles => new Claim(ClaimTypes.Role, userRoles.Role.Name)));
             return claims;
         }
-
     }
 }
