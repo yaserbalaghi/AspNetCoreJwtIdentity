@@ -1,2 +1,2 @@
 # AspNetCoreJwtIdentity
-ASP.Net Core  Identity with Json Web Token (JWT)
+ASP.Net Core 3 Identity with Json Web Token (JWT)
