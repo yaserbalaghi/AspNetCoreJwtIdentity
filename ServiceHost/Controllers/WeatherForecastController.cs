@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CrossCutting.Identity.Jwt.Contracts;
 using CrossCutting.Identity.Jwt.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ServiceHost.Models;
 
 namespace ServiceHost.Controllers
 {
@@ -16,19 +12,12 @@ namespace ServiceHost.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        private readonly ILogger<WeatherForecastController> _logger;
         private readonly IJwtService _jwtService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IJwtService jwtService)
+        public WeatherForecastController(IJwtService jwtService)
         {
-            _logger = logger;
             this._jwtService = jwtService;
-        }
+        } 
 
 
         [HttpGet]
@@ -51,7 +40,7 @@ namespace ServiceHost.Controllers
         [HttpGet]
         public ActionResult Get()
         {
-            return Content("you are authorized");
+            return Content("Welcome, you are authorized.");
         }
     }
 }
