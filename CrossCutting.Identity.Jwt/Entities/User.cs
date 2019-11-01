@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace CrossCutting.Identity.Jwt.Entities
 {
@@ -11,10 +13,13 @@ namespace CrossCutting.Identity.Jwt.Entities
         public Boolean Gender { get; set; }
         public String SecurityStamp { get; set; }
 
+        public ICollection<Role> Roles { get; set; } 
+
         public User()
         {
             Id = Guid.NewGuid();
             SecurityStamp = Guid.NewGuid().ToString();
+            Roles = new List<Role>();
         }
     }
 }
