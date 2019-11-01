@@ -47,6 +47,14 @@ namespace ServiceHost.Controllers
             return Content(await _jwtService.GenerateAsync(fakeUser));
         }
 
+        //   |  |
+        //   |  |
+        //   |  |  First get a token for the fake user(yaser balaghi), then call other actions...
+        //   |  |
+        //   \  /
+        //    \/ 
+
+
         [HttpGet]
         [Authorize]
         public ActionResult NormalUser() //OK
