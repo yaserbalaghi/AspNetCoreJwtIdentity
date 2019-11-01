@@ -10,14 +10,14 @@ namespace ServiceHost.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase 
-    {
+    public class UserController : ControllerBase
+    { 
         private readonly IJwtService _jwtService;
 
         public UserController(IJwtService jwtService)
         {
             this._jwtService = jwtService;
-        } 
+        }
 
         [HttpGet]
         [Route("[action]")]
