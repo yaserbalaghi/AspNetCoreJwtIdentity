@@ -2,7 +2,7 @@
 
 namespace CrossCutting.Identity.Jwt
 {
-    public class Class1
+    public class JwtService
     {
     }
 }
