@@ -10,7 +10,7 @@ using static CrossCutting.Identity.Jwt.Config.JwtSettingsHandler;
 
 namespace CrossCutting.Identity.Jwt.Extensions
 {
-    public static class AuthenticationBuilderExtension
+    public static class AuthenticationBuilderExtension 
     {
         public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services)
         {
