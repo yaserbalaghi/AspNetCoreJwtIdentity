@@ -7,7 +7,7 @@ namespace CrossCutting.Identity.Jwt.Entities
 {
     public class User
     {
-        public Guid Id { get; protected set; }
+        public Guid Id { get; set; }
         public String UserName { get; set; }
         public String Password { get; set; }
         public String FullName { get; set; }

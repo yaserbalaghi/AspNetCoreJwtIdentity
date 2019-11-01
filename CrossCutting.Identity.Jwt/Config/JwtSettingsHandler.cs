@@ -15,7 +15,7 @@ namespace CrossCutting.Identity.Jwt.Config
                 if (_jwtSettings != null) return _jwtSettings;
 
                 var configurationBuilder = new ConfigurationBuilder();
-                var jwtsettingsPath = GetJwtsettingsFilePath();
+                var jwtsettingsPath = GetJwtSettingsFilePath();
 
                 configurationBuilder.AddJsonFile(jwtsettingsPath, false);
 
@@ -31,7 +31,7 @@ namespace CrossCutting.Identity.Jwt.Config
             _jwtSettings = null;
         }
 
-        private static String GetJwtsettingsFilePath()
+        private static String GetJwtSettingsFilePath()
         {
             var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var jwtsettingsPath = Path.Combine(location, "jwtsettings.json");

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CrossCutting.Identity.Jwt.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20191101210719_initial_identity_db")]
+    [Migration("20191101223400_initial_identity_db")]
     partial class initial_identity_db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,26 @@ namespace CrossCutting.Identity.Jwt.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "system super administrator",
+                            Name = "SUPER-ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "system administrator",
+                            Name = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "blog writer",
+                            Name = "WRITER"
+                        });
                 });
 
             modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.User", b =>
@@ -63,6 +83,17 @@ namespace CrossCutting.Identity.Jwt.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("08a029db-1b12-4535-863a-f4ad30422219"),
+                            FullName = "Yaser Balaghi",
+                            Gender = true,
+                            Password = "123456",
+                            SecurityStamp = "00496754-4011-4642-a7a0-59a310903ad7",
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.UserRoles", b =>
@@ -77,7 +108,19 @@ namespace CrossCutting.Identity.Jwt.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoleses");
+                    b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("08a029db-1b12-4535-863a-f4ad30422219"),
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            UserId = new Guid("08a029db-1b12-4535-863a-f4ad30422219"),
+                            RoleId = 3
+                        });
                 });
 
             modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.UserRoles", b =>

@@ -65,7 +65,7 @@ namespace ServiceHost.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "SUPER-ADMIN")]
+        [Authorize(Roles = "SUPERADMIN")]
         [Route("[action]")]
         public ActionResult SuperAdminUser() //forbidden (403 status code) for fake use
         {
