@@ -18,7 +18,6 @@ namespace ServiceHost
         {
             services.AddControllers();
             services.AddJwtAuthentication();
-
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

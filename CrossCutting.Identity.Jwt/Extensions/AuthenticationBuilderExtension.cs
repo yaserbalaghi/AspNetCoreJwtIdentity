@@ -73,14 +73,14 @@ namespace CrossCutting.Identity.Jwt.Extensions
                         }
 
                         var userId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                        if (userId == null)
+                        if (userId == null || !Guid.TryParse(userId.Value,out var userIdValue))
                         {
                             ctx.Fail("token is invalid.");
                             return;
                         }
 
                         var repository = ctx.HttpContext.RequestServices.GetRequiredService<IJwtIdentityRepository>();
-                        var user = await repository.Get(Guid.Parse(userId.Value), ctx.HttpContext.RequestAborted);
+                        var user = await repository.Get(userIdValue, ctx.HttpContext.RequestAborted);
                         if (user.SecurityStamp != securityStamp?.Value)
                         {
                             ctx.Fail("token is invalid.");

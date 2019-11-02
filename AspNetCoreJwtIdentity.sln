@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossCutting.Identity.Jwt", "CrossCutting.Identity.Jwt\CrossCutting.Identity.Jwt.csproj", "{ADC59158-B757-47EB-A394-CC83FE015DC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossCutting.Identity.Jwt", "CrossCutting.Identity.Jwt\CrossCutting.Identity.Jwt.csproj", "{ADC59158-B757-47EB-A394-CC83FE015DC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHost", "ServiceHost\ServiceHost.csproj", "{845CD38F-2EED-4EE7-BDBE-23E9DCA76466}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceHost", "ServiceHost\ServiceHost.csproj", "{845CD38F-2EED-4EE7-BDBE-23E9DCA76466}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
