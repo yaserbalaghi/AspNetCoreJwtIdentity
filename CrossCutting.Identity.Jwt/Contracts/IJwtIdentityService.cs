@@ -6,6 +6,6 @@ namespace CrossCutting.Identity.Jwt.Contracts
 {
     public interface IJwtIdentityService
     {
-        Task<String> GenerateTokenAsync(User user);
+        String GenerateTokenAsync(User user);
     }
 }

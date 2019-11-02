@@ -16,7 +16,7 @@ namespace CrossCutting.Identity.Jwt.Services
 {
     public class JwtIdentityService : IJwtIdentityService
     {
-        public async Task<String> GenerateTokenAsync(User user)
+        public String GenerateTokenAsync(User user)
         {
             var securityKey = Encoding.UTF8.GetBytes(Settings.SecretKey);
             var signingCredentials =
@@ -42,7 +42,7 @@ namespace CrossCutting.Identity.Jwt.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var writeToken = tokenHandler.WriteToken(securityToken);
-            return await Task.FromResult(writeToken);
+            return writeToken;
         }
         private IEnumerable<Claim> _getClaims(User user)
         {
