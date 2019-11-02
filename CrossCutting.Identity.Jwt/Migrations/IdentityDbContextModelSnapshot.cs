@@ -19,7 +19,7 @@ namespace CrossCutting.Identity.Jwt.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.Role", b =>
+            modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.ApplicationRole", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,31 +57,41 @@ namespace CrossCutting.Identity.Jwt.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.User", b =>
+            modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
-                    b.Property<bool>("Gender")
-                        .HasColumnType("bit");
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<DateTime?>("LastLoginDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("Email");
+
+                    b.HasAlternateKey("UserName");
 
                     b.ToTable("Users");
 
@@ -89,15 +99,15 @@ namespace CrossCutting.Identity.Jwt.Migrations
                         new
                         {
                             Id = new Guid("08a029db-1b12-4535-863a-f4ad30422219"),
+                            Email = "Eng.balaghi@yahoo.com",
                             FullName = "Yaser Balaghi",
-                            Gender = true,
                             Password = "123456",
-                            SecurityStamp = "83ff1d3e-77fd-4bb6-9040-2fbc4e3f4eeb",
+                            SecurityStamp = "1b8f820c-87dd-4fd7-b890-ed9191d0231f",
                             UserName = "admin"
                         });
                 });
 
-            modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.UserRoles", b =>
+            modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.ApplicationUserRoles", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -124,15 +134,15 @@ namespace CrossCutting.Identity.Jwt.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.UserRoles", b =>
+            modelBuilder.Entity("CrossCutting.Identity.Jwt.Entities.ApplicationUserRoles", b =>
                 {
-                    b.HasOne("CrossCutting.Identity.Jwt.Entities.Role", "Role")
+                    b.HasOne("CrossCutting.Identity.Jwt.Entities.ApplicationRole", "ApplicationRole")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CrossCutting.Identity.Jwt.Entities.User", "User")
+                    b.HasOne("CrossCutting.Identity.Jwt.Entities.ApplicationUser", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

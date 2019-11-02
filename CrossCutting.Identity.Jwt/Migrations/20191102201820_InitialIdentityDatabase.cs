@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CrossCutting.Identity.Jwt.Migrations
 {
-    public partial class initial_identity_db : Migration
+    public partial class InitialIdentityDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,15 +26,18 @@ namespace CrossCutting.Identity.Jwt.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    UserName = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    FullName = table.Column<string>(nullable: true),
-                    Gender = table.Column<bool>(nullable: false),
-                    SecurityStamp = table.Column<string>(nullable: true)
+                    UserName = table.Column<string>(maxLength: 50, nullable: false),
+                    Password = table.Column<string>(maxLength: 50, nullable: true),
+                    Email = table.Column<string>(maxLength: 50, nullable: false),
+                    FullName = table.Column<string>(maxLength: 100, nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    LastLoginDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.UniqueConstraint("AK_Users_Email", x => x.Email);
+                    table.UniqueConstraint("AK_Users_UserName", x => x.UserName);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,15 +69,15 @@ namespace CrossCutting.Identity.Jwt.Migrations
                 columns: new[] { "Id", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, "system super administrator", "SUPER-ADMIN" },
+                    { 1, "system super administrator", "SUPERADMIN" },
                     { 2, "system administrator", "ADMIN" },
                     { 3, "blog writer", "WRITER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "FullName", "Gender", "Password", "SecurityStamp", "UserName" },
-                values: new object[] { new Guid("08a029db-1b12-4535-863a-f4ad30422219"), "Yaser Balaghi", true, "123456", "00496754-4011-4642-a7a0-59a310903ad7", "admin" });
+                columns: new[] { "Id", "Email", "FullName", "LastLoginDate", "Password", "SecurityStamp", "UserName" },
+                values: new object[] { new Guid("08a029db-1b12-4535-863a-f4ad30422219"), "Eng.balaghi@yahoo.com", "Yaser Balaghi", null, "123456", "1b8f820c-87dd-4fd7-b890-ed9191d0231f", "admin" });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",

@@ -5,18 +5,18 @@ using System.Text;
 
 namespace CrossCutting.Identity.Jwt.Entities
 {
-    public class Role
-    {
+    public class ApplicationRole
+    { 
         public Int32 Id { get; set; }
         public String Name { get; set; }
         public String Description { get; set; }
 
-        private readonly List<UserRoles> _users;
-        public virtual ICollection<UserRoles> Users => _users.AsReadOnly();
+        private readonly List<ApplicationUserRoles> _users;
+        public virtual ICollection<ApplicationUserRoles> Users => _users.AsReadOnly();
 
-        public Role()
+        public ApplicationRole()
         {
-            _users = new List<UserRoles>();
+            _users = new List<ApplicationUserRoles>();
         }
     }
 }

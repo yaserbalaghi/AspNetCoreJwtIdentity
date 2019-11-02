@@ -4,12 +4,12 @@ using System.Text;
 
 namespace CrossCutting.Identity.Jwt.Entities
 {
-    public class UserRoles
+    public class ApplicationUserRoles
     {
         public Guid UserId { get; set; }
-        public virtual User User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         public Int32 RoleId { get; set; }
-        public virtual Role Role { get; set; }
+        public virtual ApplicationRole ApplicationRole { get; set; }
     }
 }

@@ -9,9 +9,9 @@ namespace CrossCutting.Identity.Jwt.Contracts
 {
     public interface IJwtIdentityRepository
     {
-        Task CreateAsync(User user, CancellationToken cancellationToken);
-        Task<User> Get(Guid id, CancellationToken cancellationToken);
-        Task<User> Get(String username, String password, CancellationToken cancellationToken);
-        Task UpdateAsync(User user, CancellationToken cancellationToken);
+        Task CreateAsync(ApplicationUser user, CancellationToken cancellationToken);
+        Task<ApplicationUser> Get(Guid id, CancellationToken cancellationToken);
+        Task<ApplicationUser> Get(String username, String password, CancellationToken cancellationToken);
+        Task UpdateAsync(ApplicationUser user, CancellationToken cancellationToken);
     }
 }

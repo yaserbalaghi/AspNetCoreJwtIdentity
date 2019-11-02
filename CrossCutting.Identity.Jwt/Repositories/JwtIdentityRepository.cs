@@ -19,12 +19,12 @@ namespace CrossCutting.Identity.Jwt.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task CreateAsync(User user, CancellationToken cancellationToken)
+        public async Task CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
             await _dbContext.Users.AddAsync(user, cancellationToken);
         }
 
-        public async Task<User> Get(Guid id, CancellationToken cancellationToken)
+        public async Task<ApplicationUser> Get(Guid id, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
                 .SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
@@ -32,7 +32,7 @@ namespace CrossCutting.Identity.Jwt.Repositories
             return user;
         }
 
-        public async Task<User> Get(String username, String password, CancellationToken cancellationToken)
+        public async Task<ApplicationUser> Get(String username, String password, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
                 .SingleOrDefaultAsync(u => u.UserName == username && u.Password == password, cancellationToken);
@@ -40,7 +40,7 @@ namespace CrossCutting.Identity.Jwt.Repositories
             return user;
         }
 
-        public async Task UpdateAsync(User user,CancellationToken cancellationToken)
+        public async Task UpdateAsync(ApplicationUser user,CancellationToken cancellationToken)
         {
              _dbContext.Users.Update(user);
              await _dbContext.SaveChangesAsync(cancellationToken);

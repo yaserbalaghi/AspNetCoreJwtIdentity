@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CrossCutting.Identity.Jwt.Config;
+using CrossCutting.Identity.Jwt.Context.Configurations;
 using CrossCutting.Identity.Jwt.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,61 +15,54 @@ namespace CrossCutting.Identity.Jwt.Context
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRoles> UserRoles { get; set; } 
+        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<ApplicationRole> Roles { get; set; }
+        public DbSet<ApplicationUserRoles> UserRoles { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserRoles>().HasKey(ur => new { ur.UserId, ur.RoleId });
-            modelBuilder.Entity<UserRoles>().HasOne(ur => ur.User)
-                                            .WithMany(u => u.Roles)
-                                            .HasForeignKey(ur => ur.UserId);
-
-            modelBuilder.Entity<UserRoles>().HasOne(ur => ur.Role)
-                                            .WithMany(u => u.Users)
-                                            .HasForeignKey(ur => ur.RoleId);
-
+            modelBuilder.ApplyConfiguration(new ApplicationUserRolesConfiguration());
+            modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
 
             SeedInitialData(modelBuilder);
         }
 
         private static void SeedInitialData(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasData(new User()
+            modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser()
             {
                 Id = Guid.Parse("08a029db-1b12-4535-863a-f4ad30422219"),
                 UserName = "admin",
                 Password = "123456",
                 FullName = "Yaser Balaghi",
-                Gender = true,
+                Email = "Eng.balaghi@yahoo.com",
                 SecurityStamp = Guid.NewGuid().ToString()
             });
 
-            modelBuilder.Entity<Role>().HasData(new Role()
+            modelBuilder.Entity<ApplicationRole>().HasData(new ApplicationRole()
             {
                 Id = 1,
                 Name = "SUPERADMIN",
                 Description = "system super administrator"
-            }, new Role()
+            }, new ApplicationRole()
             {
                 Id = 2,
                 Name = "ADMIN",
                 Description = "system administrator"
-            }, new Role()
+            }, new ApplicationRole()
             {
                 Id = 3,
                 Name = "WRITER",
                 Description = "blog writer"
             });
 
-            modelBuilder.Entity<UserRoles>().HasData(new UserRoles()
+            modelBuilder.Entity<ApplicationUserRoles>().HasData(new ApplicationUserRoles()
             {
                 UserId = Guid.Parse("08a029db-1b12-4535-863a-f4ad30422219"),
                 RoleId = 2
-            }, new UserRoles()
+            }, new ApplicationUserRoles()
             {
                 UserId = Guid.Parse("08a029db-1b12-4535-863a-f4ad30422219"),
                 RoleId = 3

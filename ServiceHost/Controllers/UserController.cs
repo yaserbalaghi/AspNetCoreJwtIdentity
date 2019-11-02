@@ -45,7 +45,7 @@ namespace ServiceHost.Controllers
         [Authorize]
         public ActionResult NormalUser() //OK
         {
-            return Content("Welcome Normal User, you are authorized.");
+            return Content("Welcome normal user, you are authorized.");
         }
 
         [HttpGet]
@@ -53,7 +53,7 @@ namespace ServiceHost.Controllers
         [Route("[action]")]
         public ActionResult AdminUser() //OK
         {
-            return Content("Welcome Admin User, you are authorized.");
+            return Content("Welcome admin user, you are authorized.");
         }
 
         [HttpGet]
@@ -61,7 +61,7 @@ namespace ServiceHost.Controllers
         [Route("[action]")]
         public ActionResult WriterUser() //OK
         {
-            return Content("Welcome Writer User, you are authorized.");
+            return Content("Welcome writer user, you are authorized.");
         }
 
         [HttpGet]
@@ -69,7 +69,7 @@ namespace ServiceHost.Controllers
         [Route("[action]")]
         public ActionResult SuperAdminUser() //forbidden (403 status code) for fake use
         {
-            return Content("Welcome Super Admin User, you are authorized.");
+            return Content("Welcome super admin user, you are authorized.");
         }
     }
 }

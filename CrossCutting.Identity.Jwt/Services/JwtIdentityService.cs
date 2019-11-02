@@ -16,7 +16,14 @@ namespace CrossCutting.Identity.Jwt.Services
 {
     public class JwtIdentityService : IJwtIdentityService
     {
-        public String GenerateToken(User user) 
+        private readonly IAdditionalClaims _additionalClaims;
+
+        public JwtIdentityService(IAdditionalClaims additionalClaims = null)
+        {
+            _additionalClaims = additionalClaims;
+        }
+
+        public String GenerateToken(ApplicationUser user)
         {
             var securityKey = Encoding.UTF8.GetBytes(Settings.SecretKey);
             var signingCredentials =
@@ -35,27 +42,37 @@ namespace CrossCutting.Identity.Jwt.Services
                 NotBefore = DateTime.Now.AddMinutes(Settings.NotBeforeMinutes),
                 Expires = DateTime.Now.AddDays(Settings.ExpirationDay),
                 SigningCredentials = signingCredentials,
-                EncryptingCredentials = encryptingCredentials,
-                Subject = new ClaimsIdentity(_getClaims(user))
+                EncryptingCredentials = encryptingCredentials
             };
+
+            var claims = new List<Claim>();
+            claims.AddRange(_getDefaultClaims(user));
+
+            if (_additionalClaims != null)
+                claims.AddRange(_additionalClaims.GetCustomClaims(user));
+
+            tokenDescriptor.Subject = new ClaimsIdentity(claims);
+
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var writeToken = tokenHandler.WriteToken(securityToken);
             return writeToken;
         }
-        private IEnumerable<Claim> _getClaims(User user)
+        private IEnumerable<Claim> _getDefaultClaims(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Surname, user.FullName),
-                new Claim(ClaimTypes.Gender, user.Gender ? "Male" : "Female"),
+                new Claim(ClaimTypes.Email, user.Email ),
                 new Claim(new ClaimsIdentityOptions().SecurityStampClaimType, user.SecurityStamp)
             };
 
-            claims.AddRange(user.Roles.Select(userRoles => new Claim(ClaimTypes.Role, userRoles.Role.Name)));
+            claims.AddRange(user.Roles.Select(userRoles =>
+                new Claim(ClaimTypes.Role, userRoles.ApplicationRole.Name)));
+
             return claims;
         }
     }
