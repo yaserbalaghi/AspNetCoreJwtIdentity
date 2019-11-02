@@ -49,7 +49,7 @@ namespace ServiceHost.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "SUPERADMIN, ADMIN")]
         [Route("[action]")]
         public ActionResult AdminUser() //OK
         {
@@ -57,7 +57,7 @@ namespace ServiceHost.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "WRITER")]
+        [Authorize(Roles = "SUPERADMIN, ADMIN, WRITER")]
         [Route("[action]")]
         public ActionResult WriterUser() //OK
         {
