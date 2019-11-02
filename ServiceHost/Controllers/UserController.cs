@@ -34,7 +34,7 @@ namespace ServiceHost.Controllers
 
         //   |  |
         //   |  |  Use Postman : 
-        //   |  |  First login and get a token for the user (admin) by calling GetToken Action and send parameters to it,
+        //   |  |  First login and get a token for the user (admin) by calling 'GetToken' Action and send parameters to it,
         //   |  |  then use the token you received to call the following actions...
         //   |  |   
         //   \  /
