@@ -13,23 +13,21 @@ namespace CrossCutting.Identity.Jwt.Extensions
 {
     public static class AuthenticationBuilderExtension
     {
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
+        public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services)
         {
-            services.AddAuthentication(options =>
+            return services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 
             }).SetJwtBearerOptions();
-
-            return services;
         }
 
 
-        private static void SetJwtBearerOptions(this AuthenticationBuilder builder)
+        private static AuthenticationBuilder SetJwtBearerOptions(this AuthenticationBuilder builder)
         {
-            builder.AddJwtBearer(options =>
+            return builder.AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
