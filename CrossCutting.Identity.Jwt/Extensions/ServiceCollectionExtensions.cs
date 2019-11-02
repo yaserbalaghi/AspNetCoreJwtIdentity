@@ -13,12 +13,14 @@ namespace CrossCutting.Identity.Jwt.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddJwtIdentityServices(this IServiceCollection services) 
+        public static IServiceCollection AddJwtIdentityServices(this IServiceCollection services)
         {
-            services.AddScoped<IJwtIdentityService, JwtIdentityService>();
-            services.AddScoped<IJwtIdentityRepository, JwtIdentityRepository>();
-            services.AddDbContext<IdentityDbContext>(options => { options.UseSqlServer(Settings.ConnectionString); });
-            return services; 
+            return services.AddScoped<IJwtIdentityService, JwtIdentityService>().
+                            AddScoped<IJwtIdentityRepository, JwtIdentityRepository>().
+                            AddDbContext<IdentityDbContext>(options =>
+                            {
+                                options.UseSqlServer(Settings.ConnectionString);
+                            });
         }
     }
 }
