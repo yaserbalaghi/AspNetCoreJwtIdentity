@@ -12,6 +12,6 @@ namespace CrossCutting.Identity.Jwt.Contracts
         Task CreateAsync(User user, CancellationToken cancellationToken);
         Task<User> Get(Guid id, CancellationToken cancellationToken);
         Task<User> Get(String username, String password, CancellationToken cancellationToken);
-
+        Task UpdateAsync(User user, CancellationToken cancellationToken);
     }
 }

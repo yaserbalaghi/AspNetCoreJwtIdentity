@@ -39,5 +39,12 @@ namespace CrossCutting.Identity.Jwt.Repositories
             
             return user;
         }
+
+        public async Task UpdateAsync(User user,CancellationToken cancellationToken)
+        {
+             _dbContext.Users.Update(user);
+             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
     }
 }

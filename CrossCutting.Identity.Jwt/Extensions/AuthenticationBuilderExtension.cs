@@ -58,11 +58,10 @@ namespace CrossCutting.Identity.Jwt.Extensions
                 {
                     OnTokenValidated = async ctx =>
                     {
-
                         var claimsIdentity = (ClaimsIdentity)ctx.Principal.Identity;
                         if (claimsIdentity.Claims == null || !claimsIdentity.Claims.Any())
                         {
-                            ctx.Fail("token is invalid.");
+                            ctx.Fail("token is invalid."); 
                             return;
                         }
 
@@ -86,6 +85,9 @@ namespace CrossCutting.Identity.Jwt.Extensions
                         {
                             ctx.Fail("token is invalid.");
                         }
+
+                        user.LastLoginDate = DateTime.Now;
+                        await repository.UpdateAsync(user,ctx.HttpContext.RequestAborted);
                     }
                 };
             });

@@ -13,6 +13,7 @@ namespace CrossCutting.Identity.Jwt.Entities
         public String FullName { get; set; }
         public Boolean Gender { get; set; }
         public String SecurityStamp { get; set; }
+        public DateTime? LastLoginDate { get; set; } 
 
         private readonly List<UserRoles> _roles;
         public virtual ICollection<UserRoles> Roles => _roles.AsReadOnly();
