@@ -62,21 +62,21 @@ namespace CrossCutting.Identity.Jwt.Extensions
                         var claimsIdentity = (ClaimsIdentity)ctx.Principal.Identity;
                         if (claimsIdentity.Claims == null || !claimsIdentity.Claims.Any())
                         {
-                            ctx.Fail("Your token is invalid.");
+                            ctx.Fail("token is invalid.");
                             return;
                         }
 
                         var securityStamp = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "AspNet.Identity.SecurityStamp");
                         if (securityStamp == null)
                         {
-                            ctx.Fail("Your token is invalid.");
+                            ctx.Fail("token is invalid.");
                             return;
                         }
 
                         var userId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                         if (userId == null)
                         {
-                            ctx.Fail("Your token is invalid.");
+                            ctx.Fail("token is invalid.");
                             return;
                         }
 
@@ -84,7 +84,7 @@ namespace CrossCutting.Identity.Jwt.Extensions
                         var user = await repository.Get(Guid.Parse(userId.Value), ctx.HttpContext.RequestAborted);
                         if (user.SecurityStamp != securityStamp?.Value)
                         {
-                            ctx.Fail("Your token is invalid.");
+                            ctx.Fail("token is invalid.");
                         }
                     }
                 };
