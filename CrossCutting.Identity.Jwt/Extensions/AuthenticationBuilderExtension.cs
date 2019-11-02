@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Net;
-using System.Security.Authentication;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using CrossCutting.Identity.Jwt.Config;
 using CrossCutting.Identity.Jwt.Context;
 using CrossCutting.Identity.Jwt.Contracts;
 using CrossCutting.Identity.Jwt.Repositories;
@@ -58,17 +56,36 @@ namespace CrossCutting.Identity.Jwt.Extensions
                 };
                 options.Events = new JwtBearerEvents
                 {
-                    OnChallenge = ctx =>
-                    {
-                        if (ctx.AuthenticateFailure != null)
-                            return Task.FromException(new UnauthorizedAccessException("Unauthorized Request",
-                                    ctx.AuthenticateFailure));
-                        return Task.FromException(new UnauthorizedAccessException("Unauthorized Request"));
-                    },
-                    OnTokenValidated = ctx =>
+                    OnTokenValidated = async ctx =>
                     {
 
-                        return Task.CompletedTask;
+                        var claimsIdentity = (ClaimsIdentity)ctx.Principal.Identity;
+                        if (claimsIdentity.Claims == null || !claimsIdentity.Claims.Any())
+                        {
+                            ctx.Fail("Your token is invalid.");
+                            return;
+                        }
+
+                        var securityStamp = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "AspNet.Identity.SecurityStamp");
+                        if (securityStamp == null)
+                        {
+                            ctx.Fail("Your token is invalid.");
+                            return;
+                        }
+
+                        var userId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                        if (userId == null)
+                        {
+                            ctx.Fail("Your token is invalid.");
+                            return;
+                        }
+
+                        var repository = ctx.HttpContext.RequestServices.GetRequiredService<IJwtIdentityRepository>();
+                        var user = await repository.Get(Guid.Parse(userId.Value), ctx.HttpContext.RequestAborted);
+                        if (user.SecurityStamp != securityStamp?.Value)
+                        {
+                            ctx.Fail("Your token is invalid.");
+                        }
                     }
                 };
             });

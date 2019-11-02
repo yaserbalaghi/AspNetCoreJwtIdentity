@@ -23,7 +23,6 @@ namespace CrossCutting.Identity.Jwt.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<UserRoles>().HasKey(ur => new { ur.UserId, ur.RoleId });
-
             modelBuilder.Entity<UserRoles>().HasOne(ur => ur.User)
                                             .WithMany(u => u.Roles)
                                             .HasForeignKey(ur => ur.UserId);

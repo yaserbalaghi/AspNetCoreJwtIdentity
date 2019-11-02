@@ -46,6 +46,7 @@ namespace CrossCutting.Identity.Jwt.Services
         }
         private IEnumerable<Claim> _getClaims(User user)
         {
+            return new List<Claim>();
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),

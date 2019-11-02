@@ -2,10 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CrossCutting.Identity.Jwt.Contracts;
-using CrossCutting.Identity.Jwt.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ServiceHost.Controllers
 {
@@ -35,11 +33,13 @@ namespace ServiceHost.Controllers
         }
 
         //   |  |
+        //   |  |  Use Postman : 
         //   |  |  First login and get a token for the user (admin) by calling GetToken Action and send parameters to it,
         //   |  |  then call the following actions...
         //   |  |   
         //   \  /
         //    \/ 
+
 
         [HttpGet]
         [Authorize]
