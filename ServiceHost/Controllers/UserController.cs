@@ -29,7 +29,7 @@ namespace ServiceHost.Controllers
             if (user == null)
                 return NotFound("Username or password is incorrect");
 
-            return Content(_identityService.GenerateTokenAsync(user));
+            return Content(_identityService.GenerateToken(user));
         }
 
         //   |  |

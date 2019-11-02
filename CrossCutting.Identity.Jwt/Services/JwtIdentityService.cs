@@ -16,7 +16,7 @@ namespace CrossCutting.Identity.Jwt.Services
 {
     public class JwtIdentityService : IJwtIdentityService
     {
-        public String GenerateTokenAsync(User user)
+        public String GenerateToken(User user) 
         {
             var securityKey = Encoding.UTF8.GetBytes(Settings.SecretKey);
             var signingCredentials =
