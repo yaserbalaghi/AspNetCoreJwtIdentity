@@ -2,13 +2,9 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using CrossCutting.Identity.Jwt.Context;
 using CrossCutting.Identity.Jwt.Contracts;
-using CrossCutting.Identity.Jwt.Repositories;
-using CrossCutting.Identity.Jwt.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using static CrossCutting.Identity.Jwt.Config.JwtSettingsHandler;
@@ -17,15 +13,8 @@ namespace CrossCutting.Identity.Jwt.Extensions
 {
     public static class AuthenticationBuilderExtension
     {
-        public static void AddJwtAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
         {
-            services.AddScoped<IJwtIdentityService, JwtIdentityService>();
-            services.AddScoped<IJwtIdentityRepository, JwtIdentityRepository>();
-            services.AddDbContext<IdentityDbContext>(options =>
-            {
-                options.UseSqlServer(Settings.ConnectionString);
-            });
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -33,11 +22,14 @@ namespace CrossCutting.Identity.Jwt.Extensions
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 
             }).SetJwtBearerOptions();
+
+            return services;
         }
 
-        private static AuthenticationBuilder SetJwtBearerOptions(this AuthenticationBuilder builder)
+
+        private static void SetJwtBearerOptions(this AuthenticationBuilder builder)
         {
-            return builder.AddJwtBearer(options =>
+            builder.AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
