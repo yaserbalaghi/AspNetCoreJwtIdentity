@@ -8,23 +8,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace ServiceHost.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class UserController : ControllerBase
     {
         private readonly JwtUserService _userService;
         private readonly ITokenBuilder _tokenBuilder;
 
         public UserController(JwtUserService userService, ITokenBuilder tokenBuilder)
-        { 
+        {
             _userService = userService;
-            _tokenBuilder = tokenBuilder; 
+            _tokenBuilder = tokenBuilder;
         }
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("[action]")]
         /* username=admin & password=123456 */
-        public async Task<ActionResult> GetToken(String username, String password) 
+        public async Task<ActionResult> GetToken(String username, String password)
         {
             var user = await _userService.GetAsync(username, password);
             if (user == null) return Content("نام کاربری و یا کلمه عبور نادرست است");
@@ -49,7 +48,6 @@ namespace ServiceHost.Controllers
 
         [HttpGet]
         [Authorize(Roles = "SUPERADMIN, ADMIN")]
-        [Route("[action]")]
         public ActionResult AdminUser() //OK
         {
             return Content("Welcome admin user, you are authorized.");
@@ -57,7 +55,6 @@ namespace ServiceHost.Controllers
 
         [HttpGet]
         [Authorize(Roles = "SUPERADMIN, ADMIN, WRITER")]
-        [Route("[action]")]
         public ActionResult WriterUser() //OK
         {
             return Content("Welcome writer user, you are authorized.");
@@ -65,7 +62,6 @@ namespace ServiceHost.Controllers
 
         [HttpGet]
         [Authorize(Roles = "SUPERADMIN")]
-        [Route("[action]")]
         public ActionResult SuperAdminUser() //forbidden (403 status code) for fake use
         {
             return Content("Welcome super admin user, you are authorized.");
