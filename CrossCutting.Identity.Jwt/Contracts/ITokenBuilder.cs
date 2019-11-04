@@ -4,8 +4,8 @@ using CrossCutting.Identity.Jwt.Entities;
 
 namespace CrossCutting.Identity.Jwt.Contracts
 {
-    public interface IJwtIdentityService
+    public interface ITokenBuilder
     {
-        String GenerateToken(ApplicationUser user);
-    }
+        Task<String> GenerateTokenAsync(ApplicationUser user); 
+    } 
 }

@@ -2,30 +2,29 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using CrossCutting.Identity.Jwt.Contracts;
+using CrossCutting.Identity.Jwt.Config;
+using CrossCutting.Identity.Jwt.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using static CrossCutting.Identity.Jwt.Config.JwtSettingsHandler;
 
 namespace CrossCutting.Identity.Jwt.Extensions
 {
     public static class AuthenticationBuilderExtension
     {
-        public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services)
+        public static AuthenticationBuilder AddJwtAuthentication(this IServiceCollection services, JwtSettingsContainer jwtSettings)
         {
             return services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            }).SetJwtBearerOptions();
+            }).SetJwtBearerOptions(jwtSettings);
         }
 
 
-        private static AuthenticationBuilder SetJwtBearerOptions(this AuthenticationBuilder builder)
+        private static AuthenticationBuilder SetJwtBearerOptions(this AuthenticationBuilder builder, JwtSettingsContainer jwtSettings)
         {
             return builder.AddJwtBearer(options =>
             {
@@ -35,15 +34,16 @@ namespace CrossCutting.Identity.Jwt.Extensions
                 {
                     RequireSignedTokens = true,
                     ValidateAudience = true,
-                    ValidAudience = Settings.Audience,
+                    ValidAudience = jwtSettings.Audience,
                     ValidateIssuer = true,
-                    ValidIssuer = Settings.Issuer,
+                    ValidIssuer = jwtSettings.Issuer,
                     ClockSkew = TimeSpan.FromMinutes(5),
                     RequireExpirationTime = true,
                     ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Settings.SecretKey)),
-                    TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Settings.EncryptKey))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                    TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.EncryptKey))
                 };
+
                 options.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = async ctx =>
@@ -51,7 +51,7 @@ namespace CrossCutting.Identity.Jwt.Extensions
                         var claimsIdentity = (ClaimsIdentity)ctx.Principal.Identity;
                         if (claimsIdentity.Claims == null || !claimsIdentity.Claims.Any())
                         {
-                            ctx.Fail("token is invalid."); 
+                            ctx.Fail("token is invalid.");
                             return;
                         }
 
@@ -63,21 +63,21 @@ namespace CrossCutting.Identity.Jwt.Extensions
                         }
 
                         var userId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                        if (userId == null || !Guid.TryParse(userId.Value,out var userIdValue))
+                        if (userId == null || !Guid.TryParse(userId.Value, out var userIdValue))
                         {
                             ctx.Fail("token is invalid.");
                             return;
                         }
 
-                        var repository = ctx.HttpContext.RequestServices.GetRequiredService<IJwtIdentityRepository>();
-                        var user = await repository.Get(userIdValue, ctx.HttpContext.RequestAborted);
-                        if (user.SecurityStamp != securityStamp?.Value)
+                        var userService = ctx.HttpContext.RequestServices.GetRequiredService<JwtUserService>();
+                        var user = await userService.FindByIdAsync(userIdValue.ToString());
+                        if (user == null || user.SecurityStamp != securityStamp.Value)
                         {
                             ctx.Fail("token is invalid.");
+                            return;
                         }
 
-                        user.LastLoginDate = DateTime.Now;
-                        await repository.UpdateAsync(user,ctx.HttpContext.RequestAborted);
+                        await userService.UpdateLastLoginDateAsync(user);
                     }
                 };
             });

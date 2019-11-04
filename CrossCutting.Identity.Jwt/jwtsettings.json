@@ -7,6 +7,13 @@
     "NotBeforeMinutes": "0.0",
     "ExpirationDay": "30.0",
 
-    "ConnectionString": "Data Source=.;Initial Catalog=IdentityDb;Integrated Security=SSPI" 
+    "PasswordRequireDigit": "true",
+    "PasswordRequiredLength": "6",
+    "PasswordRequireNonAlphanumeric": "false",
+    "PasswordRequireUppercase": "false",
+    "PasswordRequireLowercase": "false",
+    "RequireUniqueEmail": "true",
+
+    "ConnectionString": "Data Source=.;Initial Catalog=IdentityDb;Integrated Security=SSPI"
   }
 }

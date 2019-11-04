@@ -1,3 +1,4 @@
+using CrossCutting.Identity.Jwt.Config;
 using CrossCutting.Identity.Jwt.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,8 +18,8 @@ namespace ServiceHost
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddJwtAuthentication();
-            services.AddJwtIdentityServices();
+            services.AddJwtIdentityServices(Configuration, out var jwtSettings);
+            services.AddJwtAuthentication(jwtSettings);
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -26,6 +27,7 @@ namespace ServiceHost
 
             app.UseHttpsRedirection();
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

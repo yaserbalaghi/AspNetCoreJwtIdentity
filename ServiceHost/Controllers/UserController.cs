@@ -1,35 +1,34 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using CrossCutting.Identity.Jwt.Contracts;
+using CrossCutting.Identity.Jwt.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ServiceHost.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IJwtIdentityService _identityService;
-        private readonly IJwtIdentityRepository _identityRepository;
+        private readonly JwtUserService _userService;
+        private readonly ITokenBuilder _jwtTokenBuilder;
 
-        public UserController(IJwtIdentityService identityService, IJwtIdentityRepository identityRepository)
+        public UserController(JwtUserService userService, ITokenBuilder jwtTokenBuilder)
         {
-            this._identityService = identityService;
-            this._identityRepository = identityRepository;
+            _userService = userService;
+            _jwtTokenBuilder = jwtTokenBuilder; 
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("[action]")]
-        [AllowAnonymous]                        /*uname=admin&pwd=123456*/
-        public async Task<ActionResult> GetToken(String uname, String pwd, CancellationToken cancellationToken)
+        /* username=admin & password=123456 */
+        public async Task<ActionResult> GetToken(String username, String password) 
         {
-            var user = await _identityRepository.Get(uname, pwd, cancellationToken);
-            if (user == null)
-                return NotFound("Username or password is incorrect");
-
-            return Content(_identityService.GenerateToken(user));
+            var user = await _userService.GetAsync(username, password);
+            if (user == null) return Content("نام کاربری و یا کلمه عبور نادرست است");
+            return Content(await _jwtTokenBuilder.GenerateTokenAsync(user));
         }
 
         //   |  |
