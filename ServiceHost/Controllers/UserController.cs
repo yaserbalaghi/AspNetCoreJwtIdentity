@@ -12,12 +12,12 @@ namespace ServiceHost.Controllers
     public class UserController : ControllerBase
     {
         private readonly JwtUserService _userService;
-        private readonly ITokenBuilder _jwtTokenBuilder;
+        private readonly ITokenBuilder _tokenBuilder;
 
-        public UserController(JwtUserService userService, ITokenBuilder jwtTokenBuilder)
-        {
+        public UserController(JwtUserService userService, ITokenBuilder tokenBuilder)
+        { 
             _userService = userService;
-            _jwtTokenBuilder = jwtTokenBuilder; 
+            _tokenBuilder = tokenBuilder; 
         }
 
         [AllowAnonymous]
@@ -28,7 +28,7 @@ namespace ServiceHost.Controllers
         {
             var user = await _userService.GetAsync(username, password);
             if (user == null) return Content("نام کاربری و یا کلمه عبور نادرست است");
-            return Content(await _jwtTokenBuilder.GenerateTokenAsync(user));
+            return Content(await _tokenBuilder.GenerateTokenAsync(user));
         }
 
         //   |  |
