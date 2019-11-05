@@ -18,7 +18,7 @@ namespace CrossCutting.Identity.Jwt.Extensions
 
             var settings = configuration.GetSection(settingsSectionName).Get<JwtSettingsContainer>();
             services.Configure<JwtSettingsContainer>(configuration.GetSection(settingsSectionName));
-
+            
             services.AddIdentity<ApplicationUser, ApplicationRole>(identityOptions =>
             {
                 identityOptions.Password.RequireDigit = settings.PasswordRequireDigit;
@@ -28,11 +28,13 @@ namespace CrossCutting.Identity.Jwt.Extensions
                 identityOptions.Password.RequireLowercase = settings.PasswordRequireLowercase;
                 identityOptions.User.RequireUniqueEmail = settings.RequireUniqueEmail;
             })
+                
             .AddEntityFrameworkStores<JwtIdentityDbContext>()
             .AddDefaultTokenProviders();
 
             services.AddScoped<JwtUserService>();
             services.AddScoped<JwtRoleService>();
+            services.AddScoped<JwtSignInService>();
             services.AddScoped<ITokenBuilder, JsonWebTokenBuilder>();
             services.AddDbContext<JwtIdentityDbContext>(options =>
             {

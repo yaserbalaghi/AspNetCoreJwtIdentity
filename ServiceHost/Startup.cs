@@ -2,6 +2,7 @@ using CrossCutting.Identity.Jwt.Config;
 using CrossCutting.Identity.Jwt.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +18,7 @@ namespace ServiceHost
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(new AuthorizeFilter()));
             services.AddJwtIdentityServices(Configuration, out var jwtSettings);
             services.AddJwtAuthentication(jwtSettings);
         }
